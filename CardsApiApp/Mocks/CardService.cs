@@ -7,17 +7,22 @@ namespace CardsApiApp.Mocks;
 public class CardService : ICardsRepository, IUsersRepository
 {
     private readonly Dictionary<string, Dictionary<string, CardDetails>> _userCards = CreateSampleUserCards();
-    public async Task<CardDetails?> GetCardDetails(string userId, string cardNumber)
+    public async Task<GetCardDetailsResult> GetCardDetails(string userId, string cardNumber)
     {
         // At this point, we would typically make an HTTP call to an external service
         // to fetch the data. For this example we use generated sample data.
         await Task.Delay(1000);
-        if (!_userCards.TryGetValue(userId, out var cards)
-        || !cards.TryGetValue(cardNumber, out var cardDetails))
+
+        if(!_userCards.ContainsKey(userId))
         {
-            return null;
+            return GetCardDetailsResult.NotFoundUser;
         }
-        return cardDetails;
+
+        if (!_userCards[userId].TryGetValue(cardNumber, out var cardDetails))
+        {
+            return GetCardDetailsResult.NotFoundCard;
+        }
+        return GetCardDetailsResult.From(cardDetails);
     }
 
     public async Task<string[]> GetAllUsersAsync()
@@ -27,14 +32,16 @@ public class CardService : ICardsRepository, IUsersRepository
         return users;
     }
 
-    public Task<string[]> GetAllUserCards(string userId)
+    public async Task<GetAllUserCardsResult> GetAllUserCards(string userId)
     {
+        await Task.Delay(1000);
+
         if (_userCards.TryGetValue(userId, out var cards))
         {
             var cardNumbers = cards.Keys.ToArray();
-            return Task.FromResult(cardNumbers);
+            return GetAllUserCardsResult.From(cardNumbers);
         }
-        return Task.FromResult(Array.Empty<string>());
+        return GetAllUserCardsResult.NotFoundUser;
     }
 
     private static Dictionary<string, Dictionary<string, CardDetails>> CreateSampleUserCards()

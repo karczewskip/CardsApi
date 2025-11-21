@@ -30,25 +30,58 @@ app.MapGet("/", () => "Hello World!");
 app.MapGet("/users", (GetUsersQueryHandler handler) =>
 {
     var query = new GetUsersQuery();
-    return handler.Handle(query);
+    var result = handler.Handle(query);
+
+    return Results.Ok(new { Users = result });
 });
 
 app.MapGet("/users/{userId}/cards", (string userId, GetUserCardsQueryHandler handler) =>
 {
     var query = new GetUserCardsQuery(userId);
-    return handler.Handle(query);
+    var result = handler.Handle(query);
+
+    if (result.Result.UserExists == false)
+    {
+        return Results.NotFound(new { Message = "User not found" });
+    }
+
+    return Results.Ok(new { CardNumbers = result.Result.CardNumbers });
 });
 
 app.MapGet("/users/{userId}/cards/{cardNumber}", (string userId, string cardNumber, GetCardDeatailsQueryHandler handler) =>
 {
     var query = new GetCardDeatailsQuery(userId, cardNumber);
-    return handler.Handle(query);
+    var result = handler.Handle(query);
+
+    if (result.Result.UserExists == false)
+    {
+        return Results.NotFound(new { Message = "User not found" });
+    }
+
+    if (result.Result.CardExists == false)
+    {
+        return Results.NotFound(new { Message = "Card not found" });
+    }
+
+    return Results.Ok(result.Result.CardDetails);
 });
 
 app.MapGet("/users/{userId}/cards/{cardNumber}/allowedActions", (string userId, string cardNumber, GetAllowedActionsQueryHandler handler) =>
 {
     var query = new GetAllowedActionsQuery(userId, cardNumber);
-    return handler.Handle(query);
+    var result = handler.Handle(query);
+
+    if (result.Result.UserExists == false)
+    {
+        return Results.NotFound(new { Message = "User not found" });
+    }
+
+    if (result.Result.CardExists == false)
+    {
+        return Results.NotFound(new { Message = "Card not found" });
+    }
+
+    return Results.Ok(new { AllowedActions = result.Result.AllowedActions });
 });
 
 app.Run();

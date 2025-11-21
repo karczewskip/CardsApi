@@ -5,6 +5,8 @@ namespace CardsApiApp.Application.Cards.UseCases;
 
 public record GetCardDeatailsQuery(string UserId, string CardNumber);
 
+public record GetCardDetailsQueryResult(bool UserExists, bool CardExists, CardDetails? CardDetails);
+
 public class GetCardDeatailsQueryHandler
 {
     private readonly ICardsRepository _cardsRepository;
@@ -13,8 +15,14 @@ public class GetCardDeatailsQueryHandler
         _cardsRepository = cardsRepository;
     }
 
-    public async Task<CardDetails?> Handle(GetCardDeatailsQuery query)
+    public async Task<GetCardDetailsQueryResult> Handle(GetCardDeatailsQuery query)
     {
-        return await _cardsRepository.GetCardDetails(query.UserId, query.CardNumber);
+        var result = await _cardsRepository.GetCardDetails(query.UserId, query.CardNumber);
+
+        return new GetCardDetailsQueryResult(
+            UserExists: result.UserExists,
+            CardExists: result.CardExists,
+            CardDetails: result.CardDetails
+        );
     }
 }
