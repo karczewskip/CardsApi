@@ -1,4 +1,4 @@
-﻿namespace CardsApiApp.Domain.Cards;
+﻿namespace CardsApiApp.Domain.Cards.ValueObjects;
 
 public enum CardStatus
 {

@@ -1,6 +1,6 @@
 ﻿using CardsApiApp.Application.Cards.Repositories;
 using CardsApiApp.Application.Users.Repositories;
-using CardsApiApp.Domain.Cards;
+using CardsApiApp.Domain.Cards.ValueObjects;
 
 namespace CardsApiApp.Mocks;
 

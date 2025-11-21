@@ -1,5 +1,5 @@
-﻿using CardsApiApp.Domain.Cards;
-using CardsApiApp.Application.Cards.Repositories;
+﻿using CardsApiApp.Application.Cards.Repositories;
+using CardsApiApp.Domain.Cards.ValueObjects;
 
 namespace CardsApiApp.Application.Cards.UseCases;
 

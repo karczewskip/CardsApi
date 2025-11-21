@@ -1,4 +1,4 @@
-﻿using CardsApiApp.Domain.Cards;
+﻿using CardsApiApp.Domain.Cards.ValueObjects;
 
 namespace CardsApiApp.Application.Cards.Repositories;
 

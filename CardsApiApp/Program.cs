@@ -2,7 +2,7 @@ using CardsApiApp.Application.Cards.Repositories;
 using CardsApiApp.Application.Cards.UseCases;
 using CardsApiApp.Application.Users.Repositories;
 using CardsApiApp.Application.Users.UseCases;
-using CardsApiApp.Domain.Cards;
+using CardsApiApp.Domain.Cards.Services;
 using CardsApiApp.Mocks;
 
 var builder = WebApplication.CreateBuilder(args);
