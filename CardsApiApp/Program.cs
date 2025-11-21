@@ -1,8 +1,9 @@
+using CardsApiApp.Application.Cards.Repositories;
 using CardsApiApp.Application.Cards.UseCases;
 using CardsApiApp.Application.Users.Repositories;
-using CardsApiApp.Application.Cards.Repositories;
-using CardsApiApp.Mocks;
 using CardsApiApp.Application.Users.UseCases;
+using CardsApiApp.Domain.Cards;
+using CardsApiApp.Mocks;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +21,7 @@ builder.Services.Scan(scan => scan
 
 builder.Services.AddScoped<IUsersRepository, CardService>();
 builder.Services.AddScoped<ICardsRepository, CardService>();
+builder.Services.AddScoped<CardAllowedActionsProvider>();
 
 var app = builder.Build();
 
@@ -40,6 +42,12 @@ app.MapGet("/users/{userId}/cards", (string userId, GetUserCardsQueryHandler han
 app.MapGet("/users/{userId}/cards/{cardNumber}", (string userId, string cardNumber, GetCardDeatailsQueryHandler handler) =>
 {
     var query = new GetCardDeatailsQuery(userId, cardNumber);
+    return handler.Handle(query);
+});
+
+app.MapGet("/users/{userId}/cards/{cardNumber}/allowedActions", (string userId, string cardNumber, GetAllowedActionsQueryHandler handler) =>
+{
+    var query = new GetAllowedActionsQuery(userId, cardNumber);
     return handler.Handle(query);
 });
 
