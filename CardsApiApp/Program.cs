@@ -4,8 +4,15 @@ using CardsApiApp.Application.Users.Repositories;
 using CardsApiApp.Application.Users.UseCases;
 using CardsApiApp.Domain.Cards.Services;
 using CardsApiApp.Mocks;
+using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Http.Json;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.Configure<JsonOptions>(options =>
+{
+    options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
+});
 
 builder.Services.Scan(scan => scan
     .FromAssemblyOf<Program>()
@@ -25,7 +32,7 @@ builder.Services.AddScoped<CardAllowedActionsProvider>();
 
 var app = builder.Build();
 
-app.MapGet("/", () => "Hello World!");
+app.MapGet("/", () => "Hello from User cards api! For checking actions please use: /users/{userId}/cards/{cardNumber}/allowedActions");
 
 app.MapGet("/users", (GetUsersQueryHandler handler) =>
 {
